@@ -11,11 +11,12 @@ router.post("/", async (req, res, next) => {
     const senderId = req.user.id;
     const { recipientId, text, conversationId, sender } = req.body;
 
-    // check if both users belong to specific conversation
-    const validConversationUsers = await Conversation.verifyConversationUsers(conversationId, senderId, recipientId);
 
     // if we already know conversation id, we can save time and just add it to message and return
     if (conversationId) {
+      // check if both users belong to specific conversationId
+      const validConversationUsers = await Conversation.verifyConversationUsers(conversationId, senderId, recipientId);
+
       if (!validConversationUsers) {
         const error = new Error("Forbidden");
         error.status = 403;
