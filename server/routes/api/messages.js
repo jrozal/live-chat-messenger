@@ -18,13 +18,11 @@ router.post("/", async (req, res, next) => {
       const validConversationUsers = await Conversation.verifyConversationUsers(conversationId, senderId, recipientId);
 
       if (!validConversationUsers) {
-        const error = new Error("Forbidden");
-        error.status = 403;
-        next(error);
-      } else {
-        const message = await Message.create({ senderId, text, conversationId });
-        return res.json({ message, sender });
+        return res.sendStatus(403);
       }
+
+      const message = await Message.create({ senderId, text, conversationId });
+      return res.json({ message, sender });
     }
     // if we don't have conversation id, find a conversation to make sure it doesn't already exist
     let conversation = await Conversation.findConversation(
