@@ -1,11 +1,11 @@
 const db = require("./db");
-const { DataTypes } = require("sequelize");
+const Sequelize = require("sequelize");
 const queryInterface = db.getQueryInterface();
 
 async function addColumn() {
   console.log('Adding "read" column');
   await queryInterface.addColumn('messages', 'read', {
-    type: DataTypes.BOOLEAN,
+    type: Sequelize.BOOLEAN,
   });
 };
 
