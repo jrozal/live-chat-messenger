@@ -17,7 +17,10 @@ export const addMessageToStore = (state, payload) => {
       const convoCopy = { ...convo };
       convoCopy.messages.push(message);
       convoCopy.latestMessageText = message.text;
-      convoCopy.notificationCount++;
+      // if new message is from other user, increment notification count
+      if (convo.otherUser.id === message.senderId) {
+        convoCopy.notificationCount++;
+      }
       return convoCopy;
     } else {
       return convo;
