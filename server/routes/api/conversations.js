@@ -22,7 +22,7 @@ router.get("/", async (req, res, next) => {
       },
       attributes: [
         "id",
-        [db.literal(`(SELECT COUNT(*) FROM messages WHERE "messages"."senderId" != ${userId} AND "messages"."conversationId" = "conversation"."id" AND "messages"."read" = false)`), 'notificationCount']
+        [db.literal(`(SELECT COUNT(*)::int FROM messages WHERE "messages"."senderId" != ${userId} AND "messages"."conversationId" = "conversation"."id" AND "messages"."read" = false)`), 'notificationCount']
       ],
       order: [[Message, "createdAt", "ASC"]],
       include: [
