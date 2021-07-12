@@ -15,4 +15,25 @@ const Message = db.define("message", {
   },
 });
 
+Message.getUnreadMessages = async function (conversationId) {
+  const messages = await Message.findAll({
+    where: {
+      conversationId: conversationId,
+      read: false
+    }
+  });
+
+  return messages;
+};
+
+Message.markAllAsRead = async function (messages) {
+  const read = await Promise.all(messages.map(async (message) => {
+    message.read = true;
+    await message.save();
+    return message;
+  }));
+
+  return read;
+};
+
 module.exports = Message;
