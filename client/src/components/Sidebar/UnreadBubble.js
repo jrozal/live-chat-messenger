@@ -5,8 +5,8 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles(() => ({
   root: {
     display: "flex",
+    justifyContent: "center",
     marginRight: 17,
-    width: 30,
   },
   bubble: {
     display: "flex",
@@ -22,13 +22,13 @@ const useStyles = makeStyles(() => ({
     fontWeight: "bold",
     color: "#FFFFFF",
     letterSpacing: -0.2,
-    paddingRight: 10,
-    paddingLeft: 10
+    paddingRight: ({notificationCount}) => notificationCount > 9 ? 12 : 10,
+    paddingLeft: ({notificationCount}) => notificationCount > 9 ? 12 : 10,
   }
 }));
 
 const UnreadBubble = ({ notificationCount }) => {
-  const classes = useStyles();
+  const classes = useStyles({notificationCount});
 
   return (
     <Box className={classes.root}>
