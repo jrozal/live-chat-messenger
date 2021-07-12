@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(({
   root: {
     display: "flex",
     justifyContent: "space-between",
@@ -15,8 +15,9 @@ const useStyles = makeStyles((theme) => ({
   },
   previewText: {
     fontSize: 12,
-    color: "#9CADC8",
+    color: ({notificationCount}) => notificationCount > 0 ? '#000000' : '#9CADC8',
     letterSpacing: -0.17,
+    fontWeight: ({notificationCount}) => notificationCount > 0 && 900,
   },
   notification: {
     height: 20,
@@ -35,10 +36,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ChatContent = (props) => {
-  const classes = useStyles();
-
   const { conversation } = props;
-  const { latestMessageText, otherUser } = conversation;
+  const { latestMessageText, otherUser, notificationCount } = conversation;
+  const classes = useStyles({notificationCount});
 
   return (
     <Box className={classes.root}>
