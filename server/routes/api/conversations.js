@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const db = require("../../db");
 const { User, Conversation, Message } = require("../../db/models");
 const { Op } = require("sequelize");
 const onlineUsers = require("../../onlineUsers");
@@ -19,7 +20,10 @@ router.get("/", async (req, res, next) => {
           user2Id: userId,
         },
       },
-      attributes: ["id"],
+      attributes: [
+        "id",
+        [db.literal(`(SELECT COUNT(*) FROM messages WHERE "messages"."senderId" != ${userId} AND "messages"."conversationId" = "conversation"."id" AND "messages"."read" = false)`), 'notificationCount']
+      ],
       order: [[Message, "createdAt", "ASC"]],
       include: [
         { model: Message },
