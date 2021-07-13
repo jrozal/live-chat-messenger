@@ -20,10 +20,7 @@ router.get("/", async (req, res, next) => {
           user2Id: userId,
         },
       },
-      attributes: [
-        "id",
-        [db.literal(`(SELECT COUNT(*)::int FROM messages WHERE "messages"."senderId" != ${userId} AND "messages"."conversationId" = "conversation"."id" AND "messages"."read" = false)`), 'notificationCount']
-      ],
+      attributes: ["id"],
       order: [[Message, "createdAt", "ASC"]],
       include: [
         { model: Message },
@@ -75,6 +72,10 @@ router.get("/", async (req, res, next) => {
       // set properties for notification count and latest message preview
       convoJSON.latestMessageText = convoJSON.messages[convoJSON.messages.length - 1].text;
       convoJSON.latestMessageTime = convoJSON.messages[convoJSON.messages.length - 1].updatedAt;
+      convoJSON.notificationCount = 0;
+      convoJSON.messages.forEach((convo) => {
+        if (convo.read === false) convoJSON.notificationCount++
+      });
       conversations[i] = convoJSON;
     }
 
