@@ -4,6 +4,7 @@ export const theme = createTheme({
   typography: {
     fontFamily: "Open Sans, sans-serif",
     fontSize: 14,
+    fontWeightBold: 900,
     button: {
       textTransform: "none",
       letterSpacing: 0,
@@ -19,6 +20,10 @@ export const theme = createTheme({
   },
   palette: {
     primary: { main: "#3A8DFF" },
-    secondary: { main: "#B0B0B0" }
+    secondary: { main: "#B0B0B0" },
+    text: {
+      primary: "#9CADC8",
+      secondary: "#000000"
+    }
   }
 });
