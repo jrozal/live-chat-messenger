@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     justifyContent: "space-between",
@@ -15,9 +15,9 @@ const useStyles = makeStyles(({
   },
   previewText: {
     fontSize: 12,
-    color: ({notificationCount}) => notificationCount > 0 ? '#000000' : '#9CADC8',
+    color: ({notificationCount}) => notificationCount > 0 ? theme.palette.text.secondary : theme.palette.text.primary,
     letterSpacing: -0.17,
-    fontWeight: ({notificationCount}) => notificationCount > 0 && 900,
+    fontWeight: ({notificationCount}) => notificationCount > 0 && theme.typography.fontWeightBold,
   },
   notification: {
     height: 20,
