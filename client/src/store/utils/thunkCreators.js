@@ -121,7 +121,7 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
 
 export const patchNotificationCount = (body) => async (dispatch) => {
   try {
-    const { data } = await axios.patch("/api/messages/clear-notifications", body);
+    const { data } = await axios.patch("/api/conversations/notifications", body);
     dispatch(clearNotificationCount(data));
   } catch (error) {
     console.error(error);

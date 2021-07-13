@@ -89,4 +89,18 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+router.patch("/notifications", async (req, res, next) => {
+  try {
+    const { conversationId } = req.body;
+    const unreadMessages = await Message.getUnreadMessages(conversationId);
+    const readMessages = await Message.markAllAsRead(unreadMessages);
+    res.json({
+      readMessages: readMessages,
+      conversationId: conversationId
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
