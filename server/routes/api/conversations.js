@@ -105,13 +105,12 @@ router.patch("/notifications", async (req, res, next) => {
       return res.sendStatus(403);
     }
 
-    const readMessages = await Conversation.markAllAsRead(
+    await Conversation.markAllAsRead(
       conversationId,
       otherUser
     );
 
     res.status(200).json({
-      readMessages: readMessages,
       conversationId: conversationId
     });
   } catch (error) {
