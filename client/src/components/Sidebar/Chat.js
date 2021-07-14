@@ -23,8 +23,12 @@ const styles = {
 class Chat extends Component {
   handleClick = async (conversation) => {
     await this.props.setActiveChat(conversation.otherUser.username);
+
     if (this.props.conversation.notificationCount > 0) {
-      await this.props.patchNotificationCount({ conversationId: conversation.id });
+      await this.props.patchNotificationCount({
+        conversationId: conversation.id,
+        otherUser: conversation.otherUser.id
+      });
     };
   };
 
