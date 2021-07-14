@@ -74,7 +74,7 @@ router.get("/", async (req, res, next) => {
       convoJSON.latestMessageTime = convoJSON.messages[convoJSON.messages.length - 1].updatedAt;
       convoJSON.notificationCount = 0;
       convoJSON.messages.forEach((convo) => {
-        if (convo.read === false) convoJSON.notificationCount++
+        if (convo.read === false && userId !== convo.senderId) convoJSON.notificationCount++
       });
       conversations[i] = convoJSON;
     }
