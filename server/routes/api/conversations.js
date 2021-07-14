@@ -91,10 +91,26 @@ router.get("/", async (req, res, next) => {
 
 router.patch("/notifications", async (req, res, next) => {
   try {
-    const { conversationId } = req.body;
-    const unreadMessages = await Message.getUnreadMessages(conversationId);
-    const readMessages = await Message.markAllAsRead(unreadMessages);
-    res.json({
+    const userId = req.user.id;
+    const { conversationId, otherUser } = req.body;
+
+    // verify conversation and users
+    const validConversationUsers = await Conversation.verifyConversationUsers(
+      conversationId,
+      userId,
+      otherUser
+    );
+
+    if (!validConversationUsers) {
+      return res.sendStatus(403);
+    }
+
+    const readMessages = await Conversation.markAllAsRead(
+      conversationId,
+      otherUser
+    );
+
+    res.status(200).json({
       readMessages: readMessages,
       conversationId: conversationId
     });
