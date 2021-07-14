@@ -90,7 +90,7 @@ export const updateConvoStore = (state, data) => {
   return state.map((convo) => {
     if (convo.id === data.conversationId) {
       const newConvo = { ...convo };
-      newConvo.notificationCount = convo.notificationCount - data.readMessages.length;
+      newConvo.notificationCount = 0;
       return newConvo;
     } else {
       return convo;
