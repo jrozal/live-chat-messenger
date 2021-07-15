@@ -26,7 +26,6 @@ socket.on("new-message", (data) => {
 });
 
 socket.on("new-conversation", (data) => {
-  console.log('new convo DATA', data)
   store.dispatch(addConversation(data.recipientId, data.message));
 });
 
