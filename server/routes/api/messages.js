@@ -4,6 +4,8 @@ const onlineUsers = require("../../onlineUsers");
 
 // expects {recipientId, text, conversationId } in body (conversationId will be null if no conversation exists yet)
 router.post("/", async (req, res, next) => {
+  const io = req.app.get('socketio');
+
   try {
     if (!req.user) {
       return res.sendStatus(401);
@@ -22,7 +24,10 @@ router.post("/", async (req, res, next) => {
       }
 
       const message = await Message.create({ senderId, text, conversationId, read });
-      return res.json({ message, sender });
+      return io.in(`${conversationId}`).emit("new-message", {
+        message: message,
+        sender: sender,
+      })
     }
     // if we don't have conversation id, find a conversation to make sure it doesn't already exist
     let conversation = await Conversation.findConversation(
@@ -46,7 +51,10 @@ router.post("/", async (req, res, next) => {
       conversationId: conversation.id,
       read
     });
-    res.json({ message, sender });
+    return io.emit("new-conversation", {
+      recipientId: recipientId,
+      message: message,
+    })
   } catch (error) {
     next(error);
   }
