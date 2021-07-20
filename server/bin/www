@@ -33,6 +33,8 @@ const server = http.createServer(app);
 
 const io = require("socket.io")(server);
 
+app.set('socketio', io);
+
 io.on("connection", (socket) => {
   socket.on("go-online", async (id) => {
     if (!onlineUsers.includes(id)) {
