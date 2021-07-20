@@ -33,8 +33,4 @@ socket.on("new-message-error", (error) => {
   console.error('New message error', error)
 });
 
-socket.on("error", (error) => {
-  console.error('Error', error)
-});
-
 export default socket;
