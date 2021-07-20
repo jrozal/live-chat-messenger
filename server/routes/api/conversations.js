@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const db = require("../../db");
 const { User, Conversation, Message } = require("../../db/models");
 const { Op } = require("sequelize");
 const onlineUsers = require("../../onlineUsers");
@@ -71,6 +72,10 @@ router.get("/", async (req, res, next) => {
       // set properties for notification count and latest message preview
       convoJSON.latestMessageText = convoJSON.messages[convoJSON.messages.length - 1].text;
       convoJSON.latestMessageTime = convoJSON.messages[convoJSON.messages.length - 1].updatedAt;
+      convoJSON.notificationCount = 0;
+      convoJSON.messages.forEach((convo) => {
+        if (convo.read === false && userId !== convo.senderId) convoJSON.notificationCount++
+      });
       conversations[i] = convoJSON;
     }
 
@@ -79,6 +84,35 @@ router.get("/", async (req, res, next) => {
     });
 
     res.json(conversations);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.patch("/notifications", async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { conversationId, otherUser } = req.body;
+
+    // verify conversation and users
+    const validConversationUsers = await Conversation.verifyConversationUsers(
+      conversationId,
+      userId,
+      otherUser
+    );
+
+    if (!validConversationUsers) {
+      return res.sendStatus(403);
+    }
+
+    await Conversation.markAllAsRead(
+      conversationId,
+      otherUser
+    );
+
+    res.status(200).json({
+      conversationId: conversationId
+    });
   } catch (error) {
     next(error);
   }

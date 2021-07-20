@@ -3,6 +3,7 @@ import socket from "../../socket";
 import {
   gotConversations,
   setSearchedUsers,
+  clearNotificationCount,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -84,6 +85,15 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
   try {
     const { data } = await axios.get(`/api/users/${searchTerm}`);
     dispatch(setSearchedUsers(data));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const patchNotificationCount = (body) => async (dispatch) => {
+  try {
+    const { data } = await axios.patch("/api/conversations/notifications", body);
+    dispatch(clearNotificationCount(data));
   } catch (error) {
     console.error(error);
   }

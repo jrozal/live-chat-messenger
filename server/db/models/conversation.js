@@ -40,4 +40,15 @@ Conversation.verifyConversationUsers = async function (conversationId, user1Id, 
   return conversation;
 };
 
+Conversation.markAllAsRead = async function (conversationId, senderId) {
+  const read = await Message.update({ read: true }, {
+    where: {
+      conversationId: conversationId,
+      senderId: senderId
+    }
+  });
+
+  return read;
+};
+
 module.exports = Conversation;

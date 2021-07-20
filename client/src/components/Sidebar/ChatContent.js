@@ -15,8 +15,9 @@ const useStyles = makeStyles((theme) => ({
   },
   previewText: {
     fontSize: 12,
-    color: "#9CADC8",
+    color: ({notificationCount}) => notificationCount > 0 ? theme.palette.text.secondary : theme.palette.text.primary,
     letterSpacing: -0.17,
+    fontWeight: ({notificationCount}) => notificationCount > 0 && theme.typography.fontWeightBold,
   },
   notification: {
     height: 20,
@@ -35,10 +36,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ChatContent = (props) => {
-  const classes = useStyles();
-
   const { conversation } = props;
-  const { latestMessageText, otherUser } = conversation;
+  const { latestMessageText, otherUser, notificationCount } = conversation;
+  const classes = useStyles({notificationCount});
 
   return (
     <Box className={classes.root}>
