@@ -51,10 +51,7 @@ router.post("/", async (req, res, next) => {
       conversationId: conversation.id,
       read
     });
-    return io.emit("new-conversation", {
-      recipientId: recipientId,
-      message: message,
-    })
+    res.json({ message, sender });
   } catch (error) {
     next(error);
   }
