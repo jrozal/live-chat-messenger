@@ -58,72 +58,11 @@ io.on("connection", (socket) => {
     })
   });
 
-  socket.on("new-message", async (data) => {
-    const senderId = data.sender.id;
-    const { recipientId, text, conversationId, sender } = data;
-
-    try {
-      if (!senderId) {
-        socket.emit("new-message-error", "New message error");
-      }
-
-      // if we already know conversation id, we can save time and just add it to message and return
-      if (conversationId) {
-        // check if both users belong to specific conversationId
-        const validConversationUsers = await Conversation.verifyConversationUsers(
-          conversationId,
-          senderId,
-          recipientId
-        );
-
-        if (!validConversationUsers) {
-          socket.emit("new-message-error", "New message error");
-        };
-
-        const message = await Message.create({
-          senderId,
-          text,
-          conversationId
-        });
-        const messageData = message.get({ plain: true });
-
-        // return socket emit data to room
-        return io.to(`${conversationId}`).emit("new-message", {
-          message: messageData,
-          sender: null,
-        });
-      }
-
-      // if we don't have conversation id, find a conversation to make sure it doesn't already exist
-      let conversation = await Conversation.findConversation(
-        senderId,
-        recipientId
-      );
-
-      if (!conversation) {
-        // create conversation
-        conversation = await Conversation.create({
-          user1Id: senderId,
-          user2Id: recipientId,
-        });
-        if (onlineUsers.includes(sender.id)) {
-          sender.online = true;
-        }
-      }
-      const message = await Message.create({
-        senderId,
-        text,
-        conversationId: conversation.id,
-      });
-      const messageData = message.get({ plain: true });
-      // return socket emit data to room
-      return io.to(`${conversationId}`).emit("new-conversation", {
-        recipientId: recipientId,
-        message: messageData,
-      });
-    } catch (error) {
-      socket.emit("new-message-error", error);
-    }
+  socket.on("new-message", (data) => {
+    socket.broadcast.emit("new-message", {
+      message: data.message,
+      sender: data.sender,
+    });
   });
 
   socket.on("logout", (id) => {
