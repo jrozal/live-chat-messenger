@@ -12,7 +12,8 @@ const http = require("http");
 const { Op } = require("sequelize");
 const db = require("../db");
 const onlineUsers = require("../onlineUsers");
-const { Conversation, Message } = require("../db/models");
+const { Conversation, Message, User } = require("../db/models");
+const jwt = require("jsonwebtoken");
 
 /**
  * Get port from environment and store in Express.
@@ -34,6 +35,20 @@ const server = http.createServer(app);
 const io = require("socket.io")(server);
 
 app.set('socketio', io);
+
+io.use((socket, next) => {
+  const token = socket.handshake.query.token
+  if (token) {
+    jwt.verify(token, process.env.SESSION_SECRET, (err, decoded) => {
+      if (err) return next(new Error('Authentication error'));
+
+      socket.decoded = decoded;
+      next();
+    });
+  } else {
+    return next();
+  }
+});
 
 io.on("connection", (socket) => {
   socket.on("go-online", async (id) => {

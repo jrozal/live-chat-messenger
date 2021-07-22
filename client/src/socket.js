@@ -7,7 +7,12 @@ import {
   addConversation,
 } from "./store/conversations";
 
-const socket = io(window.location.origin);
+const token = localStorage.getItem("messenger-token");
+const socket = io(window.location.origin, {
+  query: {
+    token: token
+  }
+});
 
 socket.on("connect", () => {
   console.log("connected to server");
