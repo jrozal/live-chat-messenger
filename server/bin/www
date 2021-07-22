@@ -37,7 +37,6 @@ app.set('socketio', io);
 
 io.on("connection", (socket) => {
   socket.on("go-online", async (id) => {
-    console.log('online users', onlineUsers)
     if (!onlineUsers[`${id}`]) {
       onlineUsers[`${id}`] = id;
     }
