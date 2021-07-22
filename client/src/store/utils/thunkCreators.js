@@ -84,14 +84,6 @@ const saveMessage = async (body) => {
   return data;
 };
 
-const sendMessage = (data, body) => {
-  socket.emit("new-message", {
-    message: data.message,
-    recipientId: body.recipientId,
-    sender: data.sender,
-  });
-};
-
 // message format to send: {recipientId, text, conversationId}
 // conversationId will be set to null if its a brand new conversation
 export const postMessage = (body) => async (dispatch) => {
@@ -104,7 +96,6 @@ export const postMessage = (body) => async (dispatch) => {
       dispatch(setNewMessage(data.message));
     }
 
-    sendMessage(data, body);
   } catch (error) {
     console.error(error);
   }
